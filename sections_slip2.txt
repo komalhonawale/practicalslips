@@ -1,0 +1,124 @@
+============================================================slip 2==========================================================
+Write a Java Program to implement Singleton pattern for multithreading
+Write a python program to find all null values in a given dataset and remove them.
+Create an HTML form that contain the Employee Registration details and write
+a JavaScript to validate DOB, Joining Date, and Salary.
+----------------------------------------------------------------------------------------------------------------------------
+Singleton.java
+public class Singleton{
+	private static Singleton uniqueInstance;
+	
+	private Singleton() {
+        
+		System.out.println("Instance has been Created");
+	}
+	
+	public static Singleton getInstance() {
+		if(uniqueInstance== null) {
+			synchronized (Singleton.class) {
+				
+				if(uniqueInstance == null) {
+					uniqueInstance=new Singleton();
+				}
+			}
+			
+		}
+		return uniqueInstance;
+	}
+	
+	public static void main(String[] args) {
+		
+		Thread t1= new Thread(new Runnable() {
+			public void run() {
+				Singleton obj=Singleton.getInstance();
+			}
+		});
+		
+		Thread t2=new Thread(new Runnable() {
+			public void run() {
+				Singleton obj=Singleton.getInstance();
+			}
+		});
+		
+		t1.start();
+		t2.start();
+	}
+}
+-------------------------------------------------------------------------------------------------------------
+import pandas as pd
+import numpy as np
+data=pd.read_csv("ass2.csv")
+print(data)
+print(data.isnull())
+print(data.notnull())
+
+data1=data.dropna(axis=1,how="all")
+print(data1)
+data["name"]=data["name"].replace(np.nan,"xyz")
+data["m1"]=data["m1"].replace(np.nan,99)
+data["m2"]=data["m2"].replace(np.nan, data["m2"].mean())
+print(data)
+----------------------------------------------------------------------------------------------------------------------
+<html>
+
+<head>
+
+    <script>
+        function validateForm() {
+
+            var salary = document.getElementById("salary").value;
+            var joiningdate = document.getElementById("joiningdate").value;
+            var age = document.getElementById("age").value;
+            var name = document.getElementById("name").value;
+
+
+            var regex = /^[0-9]+$/;
+            var nameregex = /^[a-zA-Z]+$/;
+
+
+
+            if (salary < 2000) {
+                alert("salary must be greater than 2000")
+            }
+
+            if (!regex.test(joiningdate)) {
+                alert("joiningdate should be only numbers")
+            }
+
+            if (age < 18) {
+                alert("age should be greater than 18")
+            }
+
+            if (!nameregex.test(name)) {
+                alert("should contain only letters")
+            }
+
+        }
+    </script>
+
+</head>
+<title>employee registration</title>
+
+<body>
+    <form onsubmit="return validateForm()">
+
+        <label>name</label>
+        <input type="text" id="name" name="name" required>
+        <br>
+        <label>salary</label>
+        <input type="text" id="salary" name="salary" required>
+        <br>
+        <label>joiningdate</label>
+        <input type="text" id="joiningdate" name="joiningdate" required>
+        <br>
+        <label>age</label>
+        <input type="age" id="age" name="age" required>
+        <br>
+        <input type="submit" value="submit">
+    </form>
+
+</body>
+</body>
+
+</html>
+

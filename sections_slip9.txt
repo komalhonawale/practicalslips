@@ -1,0 +1,52 @@
+=====================================================Slip 9===================================================================
+
+Design simple HR Application using Spring Framework
+Write a python program to implement Linear SVM.
+Create a node.js file that Select all records from the "customers" table, and display the
+result object on console.
+
+-------------------------------------------------------------------------------------------------------------
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.svm import SVR
+
+data=pd.read_csv("user_data1.csv")
+print(data)
+
+x=data.iloc[:,2:3].values
+y=data.iloc[:,3].values
+print(x)
+print(y)
+sr=SVR()
+sr.fit(x,y)
+
+print(sr.predict([[150]]))
+
+plt.scatter(x,y,c="red")
+plt.plot(x,sr.predict(x),c="green")
+plt.show()
+------------------------------------------------------------------------------------------------------------------------
+const mysql = require("mysql");
+const con = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "newdb",
+});
+con.connect((err) => {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log("success");
+    con.query("select * from customer", function (err, rows) {
+      if (err) throw err;
+      else console.log(rows);
+      con.query("select * from customer", function (err, rows) {
+        if (err) throw err;
+        else console.log(rows);
+      });
+    });
+  }
+});
+

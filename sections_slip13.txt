@@ -1,0 +1,185 @@
+===============================================================Slip 13============================================================
+
+Write a Java Program to implement an Adapter design pattern in mobile charger.
+Define two classes – Volt (to measure volts) and Socket (producing constant volts of
+120V). Build an adapter that can produce 3 volts, 12 volts and default 120 volts.
+Implements Adapter pattern using Class Adapter
+Write a Python program to prepare Scatter Plot for Iris Dataset [20 M]
+Using node js create a User Login System.
+
+
+---------------------------------------------------------------------------------------------------------
+Voltage.java
+public class Voltage
+{
+    private int voltage;
+    public Voltage(int v)
+    {
+        this.voltage = v;
+    }
+    public int getVolts()
+    {
+        return voltage;
+    }
+    public void setVolts(int voltage)
+    {
+        this.voltage = voltage;
+    }
+}
+SocketAdapter.java
+public interface SocketAdapter
+{
+     public Voltage get120Voltage();
+     public Voltage get12Voltage();
+     public Voltage get3VVoltage();
+} 
+Socket.java
+public class Socket
+{
+    public Voltage getVoltage()
+    {
+        return new Voltage(120); //In India 240 is the default voltage
+    }
+}
+SocketAdapterImpl.java
+public class SocketAdapterImpl extends Socket implements SocketAdapter
+{
+
+    //Using Composition for adapter pattern
+    private Socket sock = new Socket();
+    private Voltage convertVolt(Voltage v, int i)
+    {
+        return new Voltage(v.getVolts() / i);
+    }
+    @Override
+    public Voltage get120Voltage()
+    {
+        return sock.getVoltage();
+    }
+    @Override
+    public Voltage get12Voltage()
+    {
+        Voltage v = sock.getVoltage();
+        return convertVolt(v, 20);
+    }
+    @Override
+    public Voltage get3VVoltage()
+    {
+        Voltage v = sock.getVoltage();
+        return convertVolt(v, 80);
+    }
+}
+AdapterEx.java
+public class AdapterEx
+
+{
+
+    public static void main(String[] args)
+    {
+        SocketAdapter socketAdapter = new SocketAdapterImpl();
+        Voltage voltage12 = socketAdapter.get12Voltage();
+        System.out.println(voltage12.getVolts());
+
+        Voltage voltage3 = socketAdapter.get3VVoltage();
+        System.out.println(voltage3.getVolts());
+
+        Voltage voltage120 = socketAdapter.get120Voltage();
+        System.out.println(voltage120.getVolts());
+    }
+}
+
+---------------------------------------------------------------------------------------------------------
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+data=pd.read_csv("iris.csv")
+print(data)
+x=data["SepalLengthCm"]
+y=data["SepalWidthCm"]
+print(x)
+print(y)
+plt.scatter(x, y,c="green")
+plt.xlabel("SepalLengthCm")
+plt.ylabel("SepalWidthCm")
+plt.legend()
+plt.show()
+
+----------------------------------------------------------------------------------------------
+const express = require('express');
+const session = require('express-session');
+const bodyParser = require('body-parser');
+
+const app = express();
+const port = 8000;
+
+// Middleware
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(session({
+    secret: 'your-secret-key',
+    resave: false,
+    saveUninitialized: true
+}));
+
+// In-memory database (for demo purposes, use a real database in production)
+const users = [
+    { username: 'user1', password: 'password1' },
+    { username: 'user2', password: 'password2' }
+];
+
+// Routes
+app.get('/', (req, res) => {
+    res.send('Welcome to the login page');
+});
+
+app.get('/login', (req, res) => {
+    res.sendFile(__dirname + '/login.html');
+});
+
+app.post('/login', (req, res) => {
+    const { username, password } = req.body;
+
+    const user = users.find(u => u.username === username && u.password === password);
+
+    if (user) {
+        req.session.user = user;
+        res.redirect('/dashboard');
+    } else {
+        res.send('Invalid username or password');
+    }
+});
+
+app.get('/dashboard', (req, res) => {
+    if (req.session.user) {
+        res.send(`Welcome, ${req.session.user.username}!`);
+    } else {
+        res.redirect('/login');
+    }
+});
+
+app.get('/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            return res.send('Error logging out');
+        }
+        res.redirect('/');
+    });
+});
+
+app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+});
+
+login html file
+<form action="/login" method="post">
+    <div>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username">
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password">
+    </div>
+    <div>
+        <input type="submit" value="Submit">
+    </div>
+</form>

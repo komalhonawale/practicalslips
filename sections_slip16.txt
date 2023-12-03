@@ -1,0 +1,164 @@
+====================================================slip 16============================================================
+Write a Java Program to implement Observer Design Pattern for number conversion.
+Accept a number in Decimal form and represent it in Hexadecimal, Octal and Binary.
+Change the Number and it reflects in other forms also
+Write a python program to Implement Simple Linear Regression for predicting house
+price.
+Create a js file named main.js for event-driven application. There should be a main
+loop that listens for events, and then triggers a callback function when one of those
+events is detected.
+
+-------------------------------------------------------------------------------------------
+Subject.java
+import java.util.ArrayList;
+import java.util.List;
+
+public class Subject {
+	
+   private List<Observer> observers = new ArrayList<Observer>();
+   private int state;
+
+   public int getState() {
+      return state;
+   }
+
+   public void setState(int state) {
+      this.state = state;
+      notifyAllObservers();
+   }
+
+   public void attach(Observer observer){
+      observers.add(observer);		
+   }
+
+   public void notifyAllObservers(){
+      for (Observer observer : observers) {
+         observer.update();
+      }
+   } 	
+}
+Observer.java
+public abstract class Observer {
+   protected Subject subject;
+   public abstract void update();
+}
+BinaryObserver.java
+public class BinaryObserver extends Observer{
+
+   public BinaryObserver(Subject subject){
+      this.subject = subject;
+      this.subject.attach(this);
+   }
+
+   @Override
+   public void update() {
+      System.out.println( "Binary String: " + Integer.toBinaryString( subject.getState() ) ); 
+   }
+}
+OctalObserver.java
+public class OctalObserver extends Observer{
+
+   public OctalObserver(Subject subject){
+      this.subject = subject;
+      this.subject.attach(this);
+   }
+
+   @Override
+   public void update() {
+     System.out.println( "Octal String: " + Integer.toOctalString( subject.getState() ) ); 
+   }
+}
+HexaObserver.java
+public class HexaObserver extends Observer{
+
+   public HexaObserver(Subject subject){
+      this.subject = subject;
+      this.subject.attach(this);
+   }
+
+   @Override
+   public void update() {
+      System.out.println( "Hex String: " + Integer.toHexString( subject.getState() ).toUpperCase() ); 
+   }
+}
+ObserverPatternDemo.java
+public class ObserverPatternDemo {
+   public static void main(String[] args) {
+      Subject subject = new Subject();
+
+      new HexaObserver(subject);
+      new OctalObserver(subject);
+      new BinaryObserver(subject);
+
+      System.out.println("First state change: 15");	
+      subject.setState(15);
+      System.out.println("Second state change: 10");	
+      subject.setState(10);
+   }
+}
+---------------------------------------------------------------------------------------------------------
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+
+data=pd.read_csv("house.csv")
+print(data)
+
+x=data[["bedrooms"]]
+y=data.price
+print(x)
+print(y)
+
+xtrain,xtest,ytrain,ytest=train_test_split(x,y,test_size=0.2)
+print(xtrain)
+print(xtest)
+print(ytrain)
+print(ytest)
+
+le=LinearRegression()
+le.fit(xtrain,ytrain)
+print(le.intercept_)
+print(le.coef_)
+print(le.predict([[3.5]]))
+
+ypred=le.predict(xtest)
+me=mean_squared_error(ypred,ytest)
+print(me)
+
+plt.scatter(x,y,c="red")
+plt.plot(xtest,le.predict(xtest),c="green")
+plt.show()
+
+
+----------------------------------------------------------------------------------------------------------------------
+const EventEmitter = require('events');
+
+// Create an instance of EventEmitter
+const myEmitter = new EventEmitter();
+
+// Define a callback function for the 'customEvent' event
+function eventHandler() {
+  console.log('Custom event detected!');
+}
+
+// Listen for the 'customEvent' event and attach the event handler
+myEmitter.on('customEvent', eventHandler);
+
+// Start the main loop
+function mainLoop() {
+  // Simulate some asynchronous tasks or events
+  setTimeout(() => {
+    // Trigger the 'customEvent' event
+    myEmitter.emit('customEvent');
+    
+    // Continue with the main loop
+    mainLoop();
+  }, 1000); // This timeout represents some asynchronous operation
+}
+
+// Start the main loop
+mainLoop();
+

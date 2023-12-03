@@ -1,0 +1,99 @@
+=================================================Slip 11==================================================================
+Write a java program to implement Adapter pattern to design Heart Model to Beat
+Model
+Write a python program to find all null values in a given dataset and remove them.
+Create a node.js file that Select all records from the "customers" table, and delete the
+specified record.
+-------------------------------------------------------------------------------------------------------------
+// Target Interface
+interface Beat {
+    void makeSound();
+}
+
+// Adaptee Class (Existing class with incompatible interface)
+class Heart {
+    void beat() {
+        System.out.println("Heart is beating...");
+    }
+}
+
+// Adapter Class
+class HeartAdapter implements Beat {
+    private Heart heart;
+
+    public HeartAdapter(Heart heart) {
+        this.heart = heart;
+    }
+
+    @Override
+    public void makeSound() {
+        heart.beat();
+    }
+}
+
+// Client Code
+public class AdapterPatternExample {
+    public static void main(String[] args) {
+        // Existing Heart model
+        Heart heart = new Heart();
+
+        // Adapter to make Heart compatible with Beat interface
+        Beat heartAdapter = new HeartAdapter(heart);
+
+        // Using the Beat interface to make the Heart model "beat"
+        heartAdapter.makeSound();
+    }
+}
+----------------------------------------------------------------------------------------------------------------------------
+import pandas as pd
+import numpy as np
+data=pd.read_csv("ass2.csv")
+print(data)
+print(data.isnull())
+print(data.notnull())
+
+data1=data.dropna(axis=1,how="all")
+print(data1)
+data["name"]=data["name"].replace(np.nan,"xyz")
+data["m1"]=data["m1"].replace(np.nan,99)
+data["m2"]=data["m2"].replace(np.nan, data["m2"].mean())
+print(data)
+
+------------------------------------------------------------------------------------------------------------------
+const mysql = require("mysql");
+const con = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "newdb",
+});
+con.connect((err) => {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log("success");
+    con.query("select * from customer", function (err, result) {
+      if (err) throw err;
+      else {
+        console.log(result);
+        con.query(
+          "delete from customer where name = 'teja'",
+          function (err, result) {
+            if (err) throw err;
+            else {
+              console.log("Deleted Record : " + result.affectedRows);
+              con.query("select * from customer", function (err, result) {
+                if (err) throw err;
+                else 
+                {
+                    console.log("Data After delete!");
+                    console.log(result);
+                }
+              });
+            }
+          }
+        );
+      }
+    });
+  }
+});

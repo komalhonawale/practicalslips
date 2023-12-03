@@ -1,0 +1,171 @@
+========================================slip 20======================================================================================
+Write a Java Program to implement I/O Decorator for converting uppercase letters to
+lower case letters.
+Write a python program to implement Decision Tree whether or not to play Tennis.
+Develop a basic poll application (app).It should consist of two parts:
+a) A public site in which user can pick their favourite programming language and vote.
+b) An admin site that lets you add, change and delete programming languages
+
+----------------------------------------------------------------------------------------------------------------------------
+
+LowerCaseInputStream.java
+import java.io.*;
+import java.util.*;
+//extend FilterInputStream which is abstract decorator for all InputStreams
+class LowerCaseInputStream extends FilterInputStream 
+{
+	public LowerCaseInputStream(InputStream in) 
+	{
+		super(in);
+	}
+	public int read() throws IOException 
+	{
+		int c=super.read();
+		return (c==-1?c:Character.toLowerCase((char)c));
+	}
+	public int read(byte[] b,int offset,int len) throws IOException 
+	{
+		int result =super.read(b,offset,len);
+		for (int i=offset;i<offset+result;i++) 
+		{
+			b[i]=(byte)Character.toLowerCase((char)b[i]);
+		}
+		return result;
+	}
+}
+
+InputTest.java
+class InputTest
+{
+	public static void main(String[] args) throws IOException
+	{
+	int c;
+	try 
+	{
+		//set up the FileInputStream and decorate it,first with a BufferedInputStream and then our 
+    	//new LowerCaseInputStream filter
+		InputStream in =new LowerCaseInputStream(new BufferedInputStream(new FileInputStream("a.txt")));
+		// Read the charater until end of file and print it
+		while((c = in.read()) >= 0) 
+		{
+			System.out.print((char)c);
+		}
+		
+		in.close();
+	} 
+	catch(IOException e) 
+	{
+		e.printStackTrace();
+	}
+	}
+}
+----------------------------------------------------------------------------------------------------------------------
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import LabelEncoder
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix
+data=pd.read_csv("tennis.csv")
+print(data)
+
+le=LabelEncoder()
+
+data["Outlook"]=le.fit_transform(data["Outlook"])
+data["Temprature"]=le.fit_transform(data["Temprature"])
+data["Humidity"]=le.fit_transform(data["Humidity"])
+data["Wind"]=le.fit_transform(data["Wind"])
+data["Play_Tennis"]=le.fit_transform(data["Play_Tennis"])
+print(data)
+
+
+x=data.iloc[:,1:5].values
+y=data["Play_Tennis"]
+
+xtrain,xtest,ytrain,ytest=train_test_split(x,y,test_size=0.2)
+
+dc=DecisionTreeClassifier(criterion="entropy")
+dc.fit(xtrain,ytrain)
+
+from sklearn.tree import export_graphviz
+export_graphviz(dc,out_file="a1.txt")
+
+ypred=dc.predict(xtest)
+cm=confusion_matrix(ypred,ytest)
+print(cm)
+--------------------------------------------------------------------------------------------------------------------------------
+models.py
+from django.db import models
+class ProgrammingLanguage(models.Model):
+    name = models.CharField(max_length=200)
+    votes = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.name
+
+views.py
+	from django.shortcuts import render, redirect
+from .models import ProgrammingLanguage
+
+def poll(request):
+    languages = ProgrammingLanguage.objects.all()
+    context = {'languages': languages}
+    return render(request, 'poll_app/poll.html', context)
+
+def vote(request, language_id):
+language = ProgrammingLanguage.objects.get(pk=language_id)
+    language.votes += 1
+    language.save()
+    return redirect('myapp:poll')
+
+myapp/urls.py
+	from django.urls import path, re_path
+from . import views
+
+app_name = 'myapp'
+
+urlpatterns = [
+    path('', views.poll, name='poll'),
+    re_path(r'^vote/(?P<language_id>\d+)/$', views.vote, name='vote'),
+]
+
+myproject/urls.py
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('poll/', include('myapp.urls', namespace='myapp')),
+]
+
+admin.py
+from django.contrib import admin
+from .models import ProgrammingLanguage
+
+admin.site.register(ProgrammingLanguage)
+
+poll.html
+	<!DOCTYPE html>
+<html>
+  <head>
+    <title>Programming Language Poll</title>
+  </head>
+  <body>
+    <h1>Vote for Your Favorite Programming Language</h1>
+    <ul>
+      {% for language in languages %}
+      <form method="post" action="{% url 'myapp:vote' language.id %}">
+        {% csrf_token %}
+        <li>
+          {{ language.name }}
+          <button type="submit" name="vote" value="{{ language.id }}">
+            Vote
+          </button>
+          ({{ language.votes }} votes)
+        </li>
+      </form>
+      {% endfor %}
+    </ul>
+  </body>
+</html>

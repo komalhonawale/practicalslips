@@ -1,0 +1,130 @@
+==========================================slip 1 ===============================================================
+
+Write a Java Program to implement I/O Decorator for converting uppercase letters to
+lower case letters.
+Write a Python program to prepare Scatter Plot for Iris Dataset
+Create an HTML form that contain the Student Registration details and write a
+JavaScript to validate Student first and last name as it should not contain other than
+alphabets and age should be between 18 to 50.
+
+----------------------------------------------------------------------------------------------------------------------
+LowerCaseInputStream.java
+import java.io.*;
+import java.util.*;
+//extend FilterInputStream which is abstract decorator for all InputStreams
+class LowerCaseInputStream extends FilterInputStream 
+{
+	public LowerCaseInputStream(InputStream in) 
+	{
+		super(in);
+	}
+	public int read() throws IOException 
+	{
+		int c=super.read();
+		return (c==-1?c:Character.toLowerCase((char)c));
+	}
+	public int read(byte[] b,int offset,int len) throws IOException 
+	{
+		int result =super.read(b,offset,len);
+		for (int i=offset;i<offset+result;i++) 
+		{
+			b[i]=(byte)Character.toLowerCase((char)b[i]);
+		}
+		return result;
+	}
+}
+
+InputTest.java
+class InputTest
+{
+	public static void main(String[] args) throws IOException
+	{
+	int c;
+	try 
+	{
+		//set up the FileInputStream and decorate it,first with a BufferedInputStream and then our 
+    	//new LowerCaseInputStream filter
+		InputStream in =new LowerCaseInputStream(new BufferedInputStream(new FileInputStream("a.txt")));
+		// Read the charater until end of file and print it
+		while((c = in.read()) >= 0) 
+		{
+			System.out.print((char)c);
+		}
+		
+		in.close();
+	} 
+	catch(IOException e) 
+	{
+		e.printStackTrace();
+	}
+	}
+}
+-----------------------------------------------------------------------------------------------------------
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+data=pd.read_csv("iris.csv")
+print(data)
+x=data["SepalLengthCm"]
+y=data["SepalWidthCm"]
+print(x)
+print(y)
+plt.scatter(x, y,c="green")
+plt.xlabel("SepalLengthCm")
+plt.ylabel("SepalWidthCm")
+plt.legend()
+plt.show()
+---------------------------------------------------------------------------------------------------------------------------
+<html lang = 'en'>
+<head>
+
+
+    <script>
+        function validateForm()
+        {
+            var firstname = document.getElementById("firstname").value;
+            var lastname = document.getElementById("lastname").value;
+            var age = document.getElementById("age").value;
+
+            var nameRegex = /^[a-zA-Z]+$/
+            var ageRegex = /^([1-4][8-9]|50)$/;
+
+            if(!nameRegex.test(firstname) || !nameRegex.test(lastname))
+            {
+                alert("must be only alphabets");
+                return false;
+            }
+
+            if(!ageRegex.test(age))
+            {
+                alert("must be between 18 and 50");
+                return false;
+            }
+            alert("submitted");
+        }
+    </script>
+
+
+</head>
+<title>
+    student registration form
+</title>
+
+<body>
+    <h1>Student registration</h1>
+    <form onsubmit="return validateForm()">
+        <label for = "firstname"> First Name</label>
+        <input type="text" id="firstname" name="firstname" required>
+
+    <label for = "lastname">Last name</label>
+    <input type="text" id="lastname" name="lastname" required>
+    
+    <label for="age">Age</label>
+    <input type="text" id="age" name="age" required>
+
+    <input type="submit" value="submit">
+    </form>
+    
+
+</body>
+</html>

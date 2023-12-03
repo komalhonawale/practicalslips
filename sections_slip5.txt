@@ -1,0 +1,163 @@
+=====================================================slip 5======================================================
+Write a Java Program to implement Adapter pattern for Enumeration iterator
+Write a python program to implement Multiple Linear Regression for given dataset.
+Using nodejs create a web page to read two file names from user and append contents
+of first file into second file.
+----------------------------------------------------------------------------------------------------------------
+EnumerationIterator.java
+import java.util.*;
+// Enumeration interface is used to get elements from vector
+class EnumerationIterator implements Iterator {
+	Enumeration enumeration;
+
+	public EnumerationIterator(Enumeration enumeration) {
+		this.enumeration = enumeration;
+	}
+
+	public boolean hasNext() {
+		return enumeration.hasMoreElements();
+	}
+
+	public Object next() {
+		return enumeration.nextElement();
+	}
+
+	public void remove() {
+		throw new UnsupportedOperationException();
+	}
+}
+
+
+class EnumIterator {
+	public static void main (String args[]) {
+		Vector v = new Vector(Arrays.asList("JAVA","CPP","SQL","HTML"));
+		Iterator iterator = new EnumerationIterator(v.elements());
+		while (iterator.hasNext()) {
+			System.out.println(iterator.next());
+		}
+	}
+}
+
+IterEnum.java
+import java.util.*;
+public class IterEnum 
+{
+
+public static void main(String[] args)
+{
+    String[] wordArr = {"Book", "Number", "Place", "Lemon", "Apple", "Tree"};
+    Vector<String> wordList = new Vector<>(Arrays.asList (wordArr)); //directly convert array to vector
+    System.out.println("\nThe word list: \n"+wordList + "\n");
+    
+    Enumeration<String> vectorEnum = wordList.elements(); 
+    //Enumeration iterates through vector show elements one by one
+    while(vectorEnum.hasMoreElements()) 
+    { //when vector Enum has more element to get System.out.println(vectorEnum.nextElement());
+        System.out.println(vectorEnum.nextElement());
+    }
+
+    LinkedList<String> wordLinkedList = new LinkedList<>();
+    wordLinkedList.addAll(wordList); //add elements from vector to linked list add some additional items
+    wordLinkedList.add("Ball");
+    wordLinkedList.add("Mango");
+    wordLinkedList.remove("Book");
+    System.out.println("\nThe word list (LinkedList): \n" + wordLinkedList + "\n");
+
+    Iterator<String> it =wordLinkedList.iterator(); //the iterator it will point elements of the linked list
+    while(it.hasNext()) 
+    { //when vector Enum has more element to get    
+        System.out.println(it.next()); 
+    }
+}
+}
+----------------------------------------------------------------------------------------------------
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+
+data=pd.read_csv("house.csv")
+print(data)
+
+x=data[["bedrooms","sqft_living"]]
+y=data.price
+print(x)
+print(y)
+
+xtrain,xtest,ytrain,ytest=train_test_split(x,y,test_size=0.2)
+print(xtrain)
+print(xtest)
+print(ytrain)
+print(ytest)
+
+le=LinearRegression()
+le.fit(xtrain,ytrain)
+print(le.intercept_)
+print(le.coef_)
+print(le.predict([[3.5,1000]]))
+
+ypred=le.predict(xtest)
+me=mean_squared_error(ypred,ytest)
+print(me)
+
+-----------------------------------------------------------------------------------------------------
+index-html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Appender</title>
+</head>
+<body>
+    <h1>File Appender</h1>
+    <form action="/append" method="post">
+        <label for="sourceFile">Source File:</label>
+        <input type="text" id="sourceFile" name="sourceFile" required><br>
+        
+        <label for="targetFile">Target File:</label>
+        <input type="text" id="targetFile" name="targetFile" required><br>
+        
+        <input type="submit" value="Append Files">
+    </form>
+</body>
+</html>
+
+2nd file server-js
+const fs = require('fs');
+const express = require('express');
+const bodyParser = require('body-parser');
+
+const app = express();
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/index.html');
+});
+
+app.post('/append', (req, res) => {
+    const sourceFile = req.body.sourceFile;
+    const targetFile = req.body.targetFile;
+
+    fs.readFile(sourceFile, 'utf8', (err, data) => {
+        if (err) {
+            return res.send('Error reading source file: ' + err.message);
+        }
+
+        fs.appendFile(targetFile, data, (err) => {
+            if (err) {
+                return res.send('Error appending to target file: ' + err.message);
+            }
+
+            res.send('Contents appended successfully!');
+        });
+    });
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+});

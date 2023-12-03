@@ -1,0 +1,209 @@
+============================================slip 17=========================================================
+
+Write a Java Program to implement Abstract Factory Pattern for Shape interface.
+Write a python program to implement Multiple Linear Regression for a given dataset.
+Write node js application that transfer a file as an attachment on web and enables
+browser to prompt the user to download file using express js.
+------------------------------------------------------------------------------------------
+Shape.java
+public interface Shape {
+   void draw();
+}
+public class RoundedRectangle implements Shape {
+   @Override
+   public void draw() {
+      System.out.println("Inside RoundedRectangle::draw() method.");
+   }
+}
+RoundedSquare.java
+
+public class RoundedSquare implements Shape {
+   @Override
+   public void draw() {
+      System.out.println("Inside RoundedSquare::draw() method.");
+   }
+}
+Rectangle.java
+
+public class Rectangle implements Shape {
+   @Override
+   public void draw() {
+      System.out.println("Inside Rectangle::draw() method.");
+   }
+}
+Step 3
+Create an Abstract class to get factories for Normal and Rounded Shape Objects.
+
+AbstractFactory.java
+
+public abstract class AbstractFactory {
+   abstract Shape getShape(String shapeType) ;
+}
+Step 4
+Create Factory classes extending AbstractFactory to generate object of concrete class based on given information.
+
+ShapeFactory.java
+
+public class ShapeFactory extends AbstractFactory {
+   @Override
+   public Shape getShape(String shapeType){    
+      if(shapeType.equalsIgnoreCase("RECTANGLE")){
+         return new Rectangle();         
+      }else if(shapeType.equalsIgnoreCase("SQUARE")){
+         return new Square();
+      }	
+      return null;
+   }
+}
+RoundedShapeFactory.java
+
+public class RoundedShapeFactory extends AbstractFactory {
+   @Override
+   public Shape getShape(String shapeType){    
+      if(shapeType.equalsIgnoreCase("RECTANGLE")){
+         return new RoundedRectangle();         
+      }else if(shapeType.equalsIgnoreCase("SQUARE")){
+         return new RoundedSquare();
+      }	
+      return null;
+   }
+}
+Step 5
+Create a Factory generator/producer class to get factories by passing an information such as Shape
+
+FactoryProducer.java
+
+public class FactoryProducer {
+   public static AbstractFactory getFactory(boolean rounded){   
+      if(rounded){
+         return new RoundedShapeFactory();         
+      }else{
+         return new ShapeFactory();
+      }
+   }
+}
+Step 6
+Use the FactoryProducer to get AbstractFactory in order to get factories of concrete classes by passing an information such as type.
+
+AbstractFactoryPatternDemo.java
+
+public class AbstractFactoryPatternDemo {
+   public static void main(String[] args) {
+      //get shape factory
+      AbstractFactory shapeFactory = FactoryProducer.getFactory(false);
+      //get an object of Shape Rectangle
+      Shape shape1 = shapeFactory.getShape("RECTANGLE");
+      //call draw method of Shape Rectangle
+      shape1.draw();
+      //get an object of Shape Square 
+      Shape shape2 = shapeFactory.getShape("SQUARE");
+      //call draw method of Shape Square
+      shape2.draw();
+      //get shape factory
+      AbstractFactory shapeFactory1 = FactoryProducer.getFactory(true);
+      //get an object of Shape Rectangle
+      Shape shape3 = shapeFactory1.getShape("RECTANGLE");
+      //call draw method of Shape Rectangle
+      shape3.draw();
+      //get an object of Shape Square 
+      Shape shape4 = shapeFactory1.getShape("SQUARE");
+      //call draw method of Shape Square
+      shape4.draw();
+
+   }
+}
+--------------------------------------------------------------------------------
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+
+data=pd.read_csv("house.csv")
+print(data)
+
+x=data[["bedrooms","sqft_living"]]
+y=data.price
+print(x)
+print(y)
+
+xtrain,xtest,ytrain,ytest=train_test_split(x,y,test_size=0.2)
+print(xtrain)
+print(xtest)
+print(ytrain)
+print(ytest)
+
+le=LinearRegression()
+le.fit(xtrain,ytrain)
+print(le.intercept_)
+print(le.coef_)
+print(le.predict([[3.5,1000]]))
+
+ypred=le.predict(xtest)
+me=mean_squared_error(ypred,ytest)
+print(me)
+
+
+------------------------------------------------------------------------------------------------------
+const express = require('express');
+const multer = require('multer');
+const path = require('path');
+
+const app = express();
+
+// Set up multer for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads');
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
+  }
+});
+
+const upload = multer({ storage });
+
+// Serve static files
+app.use(express.static('public'));
+
+// Route for the file upload form
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Handle file uploads
+app.post('/upload', upload.single('file'), (req, res) => {
+  res.send(`<a href="/download/${req.file.filename}">Click here to download the file</a>`);
+});
+
+// Route to handle downloads
+app.get('/download/:filename', (req, res) => {
+  const file = path.join(__dirname, 'uploads', req.params.filename);
+  res.download(file);
+});
+
+// Start the server
+const port = 8000;
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
+});
+
+create a public name folder and in that create index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File Transfer App</title>
+</head>
+<body>
+  <h1>File Transfer</h1>
+  <form action="/upload" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" id="file">
+    <input type="submit" value="Upload">
+  </form>
+</body>
+</html>
+create a txt file and write any data into it
+create a uploads folder then run the js file

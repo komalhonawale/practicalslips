@@ -1,0 +1,145 @@
+======================================================Slip 10================================================================
+Write a Java Program to implement Strategy Pattern for Duck Behavior. Create
+instance variable that holds current state of Duck from there, we just need to handle all
+Flying Behaviors and Quack Behavior
+Write a Python program to prepare Scatter Plot for Iris Dataset.
+Create a node.js file that Insert Multiple Records in "student" table, and display the
+result object on console.
+
+--------------------------------------------------------------------------------------------------------------------
+
+QuackBehaviour.java
+package javaprograms;
+public interface QuackBehaviour {
+public default void quack() {
+System.out.println("Quack");
+}
+}
+FlyBehaviour.java
+package javaprograms;
+public interface FlyBehaviour {
+public void fly();
+}
+2)Create Class -
+FlyWithWings.java
+package javaprograms;public class FlyWithWings implements FlyBehaviour {
+public void fly() {
+System.out.println("I'm flying!!");
+}
+}
+Quack.java
+package javaprograms;
+public class Quack implements QuackBehaviour {
+public void quack() {
+System.out.println("Quack");
+}
+}
+ModolDuck.java
+package javaprograms;
+public class ModolDuck extends Duck {
+public ModolDuck() {
+flyBehaviour = new FlyNoWay();
+quackBehaviour = new Quack();
+}
+public void display() {
+System.out.println("I'm a model duck");
+}
+}
+MallardDuck.java
+package javaprograms;
+public class MallardDuck extends Duck {
+public MallardDuck() {
+quackBehaviour = new Quack();
+flyBehaviour = new FlyWithWings();
+}
+public void display() {
+System.out.println("I'm a real Mallard duck");
+}
+}
+Duck.java
+package javaprograms;
+public class MallardDuck extends Duck {
+public MallardDuck() {
+quackBehaviour = new Quack();
+flyBehaviour = new FlyWithWings();
+}
+public void display() {
+System.out.println("I'm a real Mallard duck");}
+}
+FlyRocketPowered.java
+package javaprograms;
+public class FlyRocketPowered implements FlyBehaviour {
+public void fly() {
+System.out.println("I'm flying with a rocket!");
+}
+}
+FlyNoWay.java
+package javaprograms;
+public class FlyNoWay implements FlyBehaviour {
+public void fly() {
+System.out.println("I can't fly");
+}
+}
+MiniDuckSimulator.java
+package javaprograms;
+public class MiniDuckSimulator {
+public static void main(String[] args) {
+Duck mallard = new MallardDuck();
+mallard.performQuack();
+mallard.performFly();
+Duck model = new ModolDuck();
+model.performFly();
+model.setFlyBehaviour(new FlyRocketPowered());
+model.performFly();
+}
+}
+-----------------------------------------------------------------------------------------------------------------------
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+data=pd.read_csv("iris.csv")
+print(data)
+x=data["SepalLengthCm"]
+y=data["SepalWidthCm"]
+print(x)
+print(y)
+plt.scatter(x, y,c="green")
+plt.xlabel("SepalLengthCm")
+plt.ylabel("SepalWidthCm")
+plt.legend()
+plt.show()
+--------------------------------------------------------------------------------------------------------------------------
+const mysql = require("mysql");
+const con = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "newdb",
+});
+con.connect((err) => {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log("success");
+    con.query("create table students(roll int primary key, name text,address text)",function (err) {
+        if (err) throw err;
+        else {
+          con.query(
+            "insert into students values(111,'sam','kondhwa'),(222,'vaish','kirkitwadi'),(333,'saarth','wanawadi')",
+            function (err) {
+              if (err) throw err;
+              else {
+                console.log("data inserted!");
+                con.query("select * from students", function (err, result) {
+                  if (err) throw err;
+                  else console.log(result);
+                });
+              }
+            }
+          );
+        }
+      }
+    );
+  }
+});
+

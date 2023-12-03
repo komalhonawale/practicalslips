@@ -1,0 +1,221 @@
+=================================================slip 6======================================================================
+Write a Java Program to implement command pattern to test Remote Control
+Write a python program to implement Polynomial Linear Regression for given dataset
+Create a Node.js file that opens the requested file and returns the content to the client.
+If anything goes wrong, throw a 404 error.
+-----------------------------------------------------------------------------------------------------------------
+
+remote control
+
+Command.java
+package javaprograms;
+interface Command
+{
+public void execute();
+}
+2)Create Class
+Light.java
+package javaprograms;
+public class Light
+{
+public void on()
+{
+System.out.println("Light is on");
+}
+public void off()
+{
+System.out.println("Light is off");
+}
+}LightOnCommand.java
+package javaprograms;
+class LightOnCommand implements Command
+{
+Light light;
+// The constructor is passed the light it
+// is going to control.
+public LightOnCommand(Light light)
+{
+this.light = light;
+}
+public void execute()
+{
+light.on();
+}
+}
+LightOffCommand.java
+package javaprograms;
+class LightOffCommand implements Command
+{
+Light light;
+public LightOffCommand(Light light)
+{
+this.light = light;
+}
+public void execute()
+{
+light.off();
+}
+}
+Stereo.java
+package javaprograms;
+public class Stereo
+{
+public void on()
+{
+System.out.println("Stereo
+}
+public void off()
+{
+System.out.println("Stereo
+}
+public void setCD()
+{
+System.out.println("Stereo
+"for CD
+}
+public void setDVD()
+{
+is on");
+is off");
+is set " +
+input");System.out.println("Stereo is set"+
+" for DVD input");
+}
+public void setRadio()
+{
+System.out.println("Stereo is set" +
+" for Radio");
+}
+public void setVolume(int volume)
+{
+// code to set the volume
+System.out.println("Stereo volume set"
++ " to " + volume);
+}
+}
+StereoOffCommand.java
+package javaprograms;
+class StereoOffCommand implements Command
+{
+Stereo stereo;
+public StereoOffCommand(Stereo stereo)
+{
+this.stereo = stereo;
+}
+public void execute()
+{
+stereo.off();
+}
+}
+StereoOnWithCDCommand.java
+package javaprograms;
+class StereoOnWithCDCommand implements Command
+{
+Stereo stereo;
+public StereoOnWithCDCommand(Stereo stereo)
+{
+this.stereo = stereo;
+}
+public void execute()
+{
+stereo.on();
+stereo.setCD();
+stereo.setVolume(11);
+}
+}
+SimpleRemoteControl.java
+package javaprograms;
+class SimpleRemoteControl
+{Command slot;
+// only one button
+public SimpleRemoteControl()
+{
+}
+public void setCommand(Command command)
+{
+// set the command the remote will
+// execute
+slot = command;
+}
+public void buttonWasPressed()
+{
+slot.execute();
+}
+}
+RemoteControlTest.java
+package javaprograms;
+class RemoteControlTest
+{
+public static void main(String[] args)
+{
+SimpleRemoteControl remote =
+new SimpleRemoteControl();
+Light light = new Light();
+Stereo stereo = new Stereo();
+// we can change command dynamically
+remote.setCommand(new
+LightOnCommand(light));
+remote.buttonWasPressed();
+remote.setCommand(new
+StereoOnWithCDCommand(stereo));
+remote.buttonWasPressed();
+remote.setCommand(new
+StereoOffCommand(stereo));
+remote.buttonWasPressed();
+}
+}
+--------------------------------------------------------------------------------------------------------------
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.metrics import confusion_matrix
+
+data=pd.read_csv("position_salaries.csv")
+x=data.iloc[:,1:2].values
+y=data.iloc[:,2].values
+print(x)
+print(y)
+le=LinearRegression()
+le.fit(x,y)
+
+po=PolynomialFeatures(degree=4)
+xp=po.fit_transform(x)
+pe=LinearRegression()
+pe.fit(xp,y)
+
+plt.scatter(x,y,c="red")
+plt.plot(x,le.predict(x),c="green")
+plt.show()
+
+plt.scatter(x,y,c="red")
+plt.plot(x,pe.predict(po.fit_transform(x)),c="green")
+plt.show()
+
+print(le.predict([[3.5]]))
+print(pe.predict(po.fit_transform([[3.5]])))
+
+
+------------------------------------------------------------------------------------------------------------------
+const http = require('http');
+const fs = require('fs');
+
+const server = http.createServer((req, res) => {
+    const filePath = `.${req.url}`;
+    fs.readFile(filePath, (err, data) => {
+        if (err) {
+            res.writeHead(404, {'Content-Type': 'text/plain'});
+            res.end('404 Not Found');
+        } else {
+            res.writeHead(200, {'Content-Type': 'text/plain'});
+            res.end(data);
+        }
+    });
+});
+
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+});
+
