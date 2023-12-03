@@ -1,0 +1,43 @@
+============================================slip 22===========================================================
+Design simple HR Application using Spring Framework
+Write a Python program to prepare Scatter Plot for Iris Dataset
+Design a Django application: An admin site that lets you add, change and delete
+programming languages.
+-----------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+data=pd.read_csv("iris.csv")
+print(data)
+x=data["SepalLengthCm"]
+y=data["SepalWidthCm"]
+print(x)
+print(y)
+plt.scatter(x, y,c="green")
+plt.xlabel("SepalLengthCm")
+plt.ylabel("SepalWidthCm")
+plt.legend()
+plt.show()
+--------------------------------------------------------------------------------------------------------------------
+models.py
+from django.db import models
+class ProgrammingLanguage(models.Model):
+    name = models.CharField(max_length=200)
+    votes = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.name
+admin.py
+	from django.contrib import admin
+from .models import ProgrammingLanguage
+
+admin.site.register(ProgrammingLanguage)
+myproject/urls.py
+	from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+]

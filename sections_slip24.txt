@@ -1,0 +1,216 @@
+==========================================slip 24==================================================
+Write a Java Program to implement Iterator Pattern for Designing Menu like Breakfast,
+Lunch or Dinner Menu
+Write a python program to make Categorical values in numeric format for a given
+dataset
+Implement Login System using Django.
+
+---------------------------------------------------------------------------------------------------------------
+import java.util.ArrayList;
+import java.util.Iterator;
+
+// Menu Item class
+class MenuItem {
+    private String name;
+    private String description;
+
+    public MenuItem(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+}
+
+// Menu Interface
+interface Menu {
+    Iterator<MenuItem> createIterator();
+}
+
+// Breakfast Menu
+class BreakfastMenu implements Menu {
+    private ArrayList<MenuItem> menuItems;
+
+    public BreakfastMenu() {
+        menuItems = new ArrayList<>();
+        addItem("Eggs and Toast", "Scrambled eggs with toast");
+        addItem("Pancakes", "Fluffy pancakes with syrup");
+    }
+
+    public void addItem(String name, String description) {
+        MenuItem menuItem = new MenuItem(name, description);
+        menuItems.add(menuItem);
+    }
+
+    @Override
+    public Iterator<MenuItem> createIterator() {
+        return menuItems.iterator();
+    }
+}
+
+// Lunch Menu
+class LunchMenu implements Menu {
+    private MenuItem[] menuItems;
+    private int numberOfItems = 0;
+
+    public LunchMenu() {
+        menuItems = new MenuItem[5];
+        addItem("Chicken Sandwich", "Grilled chicken sandwich");
+        addItem("Caesar Salad", "Fresh Caesar salad with chicken");
+    }
+
+    public void addItem(String name, String description) {
+        MenuItem menuItem = new MenuItem(name, description);
+        if (numberOfItems < menuItems.length) {
+            menuItems[numberOfItems] = menuItem;
+            numberOfItems++;
+        }
+    }
+
+    @Override
+    public Iterator<MenuItem> createIterator() {
+        return new LunchMenuIterator(menuItems);
+    }
+}
+
+// Iterator for Lunch Menu
+class LunchMenuIterator implements Iterator<MenuItem> {
+    private MenuItem[] items;
+    private int position = 0;
+
+    public LunchMenuIterator(MenuItem[] items) {
+        this.items = items;
+    }
+
+    @Override
+    public boolean hasNext() {
+        return position < items.length && items[position] != null;
+    }
+
+    @Override
+    public MenuItem next() {
+        MenuItem menuItem = items[position];
+        position++;
+        return menuItem;
+    }
+}
+
+// Client Code
+public class MenuClient {
+    public static void printMenu(Menu menu) {
+        Iterator<MenuItem> iterator = menu.createIterator();
+        System.out.println("Menu:");
+        while (iterator.hasNext()) {
+            MenuItem menuItem = iterator.next();
+            System.out.println(menuItem.getName() + ": " + menuItem.getDescription());
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        BreakfastMenu breakfastMenu = new BreakfastMenu();
+        LunchMenu lunchMenu = new LunchMenu();
+
+        printMenu(breakfastMenu);
+        printMenu(lunchMenu);
+    }
+}
+
+---------------------------------------------------------------------------------------------------------------
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import OneHotEncoder
+
+data=pd.read_csv("ass3.csv")
+print(data)
+x=data.iloc[:,0:1].values
+print(x)
+
+le=LabelEncoder()
+x1=le.fit_transform(x)
+print(x1)
+
+oe=OneHotEncoder()
+x2=oe.fit_transform(x).toarray()
+print(x2)
+-------------------------------------------------------------------------------------------------------------------
+settings.py (add following):
+	AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+)
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'home'
+views.py
+	from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
+
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('welcome')  
+    return render(request, 'registration/login.html')
+
+def welcome(request):
+    return render(request, 'registration/home.html')
+
+login.html
+	<!DOCTYPE html>
+<html>
+  <head>
+    <title>Login</title>
+  </head>
+  <body>
+    <h1>Login</h1>
+    <form method="post">
+      {% csrf_token %}
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required />
+      <br />
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required />
+      <br />
+      <button type="submit">Login</button>
+    </form>
+  </body>
+</html>
+home.html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    Welcome
+  </body>
+</html>
+
+myapp/urls.py
+	from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('login/', views.user_login, name='login'),
+    path('welcome/', views.welcome, name='welcome')
+]
+
+myproject/urls.py
+	from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('myapp.urls')),
+]

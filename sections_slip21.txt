@@ -1,0 +1,261 @@
+=================================================================slip 21=======================================================
+Write a Java Program to implement command pattern to test Remote Control
+Write a python program to implement Linear SVM.
+Design a Django application: A public site in which user can pick their favourite
+programming language and vote.
+---------------------------------------------------------------------------------------------------------
+
+remote control
+
+Command.java
+package javaprograms;
+interface Command
+{
+public void execute();
+}
+2)Create Class
+Light.java
+package javaprograms;
+public class Light
+{
+public void on()
+{
+System.out.println("Light is on");
+}
+public void off()
+{
+System.out.println("Light is off");
+}
+}LightOnCommand.java
+package javaprograms;
+class LightOnCommand implements Command
+{
+Light light;
+// The constructor is passed the light it
+// is going to control.
+public LightOnCommand(Light light)
+{
+this.light = light;
+}
+public void execute()
+{
+light.on();
+}
+}
+LightOffCommand.java
+package javaprograms;
+class LightOffCommand implements Command
+{
+Light light;
+public LightOffCommand(Light light)
+{
+this.light = light;
+}
+public void execute()
+{
+light.off();
+}
+}
+Stereo.java
+package javaprograms;
+public class Stereo
+{
+public void on()
+{
+System.out.println("Stereo
+}
+public void off()
+{
+System.out.println("Stereo
+}
+public void setCD()
+{
+System.out.println("Stereo
+"for CD
+}
+public void setDVD()
+{
+is on");
+is off");
+is set " +
+input");System.out.println("Stereo is set"+
+" for DVD input");
+}
+public void setRadio()
+{
+System.out.println("Stereo is set" +
+" for Radio");
+}
+public void setVolume(int volume)
+{
+// code to set the volume
+System.out.println("Stereo volume set"
++ " to " + volume);
+}
+}
+StereoOffCommand.java
+package javaprograms;
+class StereoOffCommand implements Command
+{
+Stereo stereo;
+public StereoOffCommand(Stereo stereo)
+{
+this.stereo = stereo;
+}
+public void execute()
+{
+stereo.off();
+}
+}
+StereoOnWithCDCommand.java
+package javaprograms;
+class StereoOnWithCDCommand implements Command
+{
+Stereo stereo;
+public StereoOnWithCDCommand(Stereo stereo)
+{
+this.stereo = stereo;
+}
+public void execute()
+{
+stereo.on();
+stereo.setCD();
+stereo.setVolume(11);
+}
+}
+SimpleRemoteControl.java
+package javaprograms;
+class SimpleRemoteControl
+{Command slot;
+// only one button
+public SimpleRemoteControl()
+{
+}
+public void setCommand(Command command)
+{
+// set the command the remote will
+// execute
+slot = command;
+}
+public void buttonWasPressed()
+{
+slot.execute();
+}
+}
+RemoteControlTest.java
+package javaprograms;
+class RemoteControlTest
+{
+public static void main(String[] args)
+{
+SimpleRemoteControl remote =
+new SimpleRemoteControl();
+Light light = new Light();
+Stereo stereo = new Stereo();
+// we can change command dynamically
+remote.setCommand(new
+LightOnCommand(light));
+remote.buttonWasPressed();
+remote.setCommand(new
+StereoOnWithCDCommand(stereo));
+remote.buttonWasPressed();
+remote.setCommand(new
+StereoOffCommand(stereo));
+remote.buttonWasPressed();
+}
+}
+
+----------------------------------------------------------------------------------------------------------
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.svm import SVR
+
+data=pd.read_csv("user_data1.csv")
+print(data)
+
+x=data.iloc[:,2:3].values
+y=data.iloc[:,3].values
+print(x)
+print(y)
+sr=SVR()
+sr.fit(x,y)
+
+print(sr.predict([[150]]))
+
+plt.scatter(x,y,c="red")
+plt.plot(x,sr.predict(x),c="green")
+plt.show()
+
+---------------------------------------------------------------------------------------------------------------
+
+models.py
+from django.db import models
+class ProgrammingLanguage(models.Model):
+    name = models.CharField(max_length=200)
+    votes = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.name
+
+views.py
+	from django.shortcuts import render, redirect
+from .models import ProgrammingLanguage
+
+def poll(request):
+    languages = ProgrammingLanguage.objects.all()
+    context = {'languages': languages}
+    return render(request, 'poll_app/poll.html', context)
+
+def vote(request, language_id):
+language = ProgrammingLanguage.objects.get(pk=language_id)
+    language.votes += 1
+    language.save()
+    return redirect('myapp:poll')
+
+myapp/urls.py
+	from django.urls import path, re_path
+from . import views
+
+app_name = 'myapp'
+
+urlpatterns = [
+    path('', views.poll, name='poll'),
+    re_path(r'^vote/(?P<language_id>\d+)/$', views.vote, name='vote'),
+]
+
+myproject/urls.py
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('poll/', include('myapp.urls', namespace='myapp')),
+]
+poll.html
+	<!DOCTYPE html>
+<html>
+  <head>
+    <title>Programming Language Poll</title>
+  </head>
+  <body>
+    <h1>Vote for Your Favorite Programming Language</h1>
+    <ul>
+      {% for language in languages %}
+      <form method="post" action="{% url 'myapp:vote' language.id %}">
+        {% csrf_token %}
+        <li>
+          {{ language.name }}
+          <button type="submit" name="vote" value="{{ language.id }}">
+            Vote
+          </button>
+          ({{ language.votes }} votes)
+        </li>
+      </form>
+      {% endfor %}
+    </ul>
+  </body>
+</html>
+
+
+

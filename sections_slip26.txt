@@ -1,0 +1,158 @@
+=========================================================slip 26==============================================================
+Write a Java Program to implement Strategy Pattern for Duck Behavior. Create
+instance variable that holds current state of Duck from there, we just need to handle all
+Flying Behaviors and Quack Behavior.
+Write a python program to implement Multiple Linear Regression for given dataset.
+Create a Node.js file that demonstrates create database and table in MySQL.
+-------------------------------------------------------------------------------------------------------------------------
+
+1) Create Interface
+QuackBehaviour.java
+package javaprograms;
+public interface QuackBehaviour {
+public default void quack() {
+System.out.println("Quack");
+}
+}
+FlyBehaviour.java
+package javaprograms;
+public interface FlyBehaviour {
+public void fly();
+}
+2)Create Class -
+FlyWithWings.java
+package javaprograms;public class FlyWithWings implements FlyBehaviour {
+public void fly() {
+System.out.println("I'm flying!!");
+}
+}
+Quack.java
+package javaprograms;
+public class Quack implements QuackBehaviour {
+public void quack() {
+System.out.println("Quack");
+}
+}
+ModolDuck.java
+package javaprograms;
+public class ModolDuck extends Duck {
+public ModolDuck() {
+flyBehaviour = new FlyNoWay();
+quackBehaviour = new Quack();
+}
+public void display() {
+System.out.println("I'm a model duck");
+}
+}
+MallardDuck.java
+package javaprograms;
+public class MallardDuck extends Duck {
+public MallardDuck() {
+quackBehaviour = new Quack();
+flyBehaviour = new FlyWithWings();
+}
+public void display() {
+System.out.println("I'm a real Mallard duck");
+}
+}
+Duck.java
+package javaprograms;
+public class MallardDuck extends Duck {
+public MallardDuck() {
+quackBehaviour = new Quack();
+flyBehaviour = new FlyWithWings();
+}
+public void display() {
+System.out.println("I'm a real Mallard duck");}
+}
+FlyRocketPowered.java
+package javaprograms;
+public class FlyRocketPowered implements FlyBehaviour {
+public void fly() {
+System.out.println("I'm flying with a rocket!");
+}
+}
+FlyNoWay.java
+package javaprograms;
+public class FlyNoWay implements FlyBehaviour {
+public void fly() {
+System.out.println("I can't fly");
+}
+}
+MiniDuckSimulator.java
+package javaprograms;
+public class MiniDuckSimulator {
+public static void main(String[] args) {
+Duck mallard = new MallardDuck();
+mallard.performQuack();
+mallard.performFly();
+Duck model = new ModolDuck();
+model.performFly();
+model.setFlyBehaviour(new FlyRocketPowered());
+model.performFly();
+}
+}
+--------------------------------------------------------------------------------------------------------------------------
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+
+data=pd.read_csv("house.csv")
+print(data)
+
+x=data[["bedrooms","sqft_living"]]
+y=data.price
+print(x)
+print(y)
+
+xtrain,xtest,ytrain,ytest=train_test_split(x,y,test_size=0.2)
+print(xtrain)
+print(xtest)
+print(ytrain)
+print(ytest)
+
+le=LinearRegression()
+le.fit(xtrain,ytrain)
+print(le.intercept_)
+print(le.coef_)
+print(le.predict([[3.5,1000]]))
+
+ypred=le.predict(xtest)
+me=mean_squared_error(ypred,ytest)
+print(me)
+
+
+----------------------------------------------------------------------------------------------------------------
+const mysql = require("mysql");
+const mycon = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "test",
+});
+mycon.connect((err) => {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log("success");
+    mycon.query("create database newdb", function (err, result) {
+      if (err) console.log(err);
+      console.log("Database Created");
+    });
+
+    mycon.query("use newdb", function (err) {
+      if (err) console.log(err);
+      else console.log("Database { " + "newdb } selected!");
+    });
+
+    var sql = "create table customer(name varchar(10), address varchar(10))";
+    mycon.query(sql, function (err, result) {
+      if (err) console.log(err);
+      else console.log("Table Created");
+    });
+  }
+});
+
